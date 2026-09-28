@@ -82,7 +82,395 @@ I specialize in modern frontend engineering and streaming architectures:
 How can I assist you with your project or code today?`;
   }
 
-  // 2. React 19 / Hooks / State
+  // 2. Starter Prompt 1: Tailwind CSS Card Component
+  if (lower.includes('card') || (lower.includes('tailwind') && lower.includes('komponen'))) {
+    if (isIndonesian) {
+      return `### Komponen Card Modern dengan Tailwind CSS
+
+Berikut adalah komponen Card modern, responsif, dan elegan menggunakan Tailwind CSS lengkap dengan efek glassmorphism, badge status, dan hover micro-interaction yang siap digunakan:
+
+\`\`\`tsx
+import React from 'react';
+import { ArrowUpRight, Sparkles, Star } from 'lucide-react';
+
+interface ProjectCardProps {
+  title?: string;
+  category?: string;
+  description?: string;
+  rating?: number;
+  imageUrl?: string;
+}
+
+export function ModernCard({
+  title = "Universal AI Design System",
+  category = "Frontend Engineering",
+  description = "Komponen antarmuka modern dengan transisi halus, dark mode optimal, dan aksesibilitas ramah pengguna.",
+  rating = 4.9,
+  imageUrl = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"
+}: ProjectCardProps) {
+  return (
+    <div className="group relative w-full max-w-sm rounded-2xl bg-[#0D111D] border border-slate-800 p-5 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-indigo-500/50 hover:shadow-2xl hover:shadow-indigo-500/10">
+      {/* Gambar Thumbnail dengan Efek Zoom */}
+      <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-slate-900">
+        <img
+          src={imageUrl}
+          alt={title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-amber-400 backdrop-blur-md border border-white/10">
+          <Star className="w-3.5 h-3.5 fill-amber-400" />
+          <span>{rating}</span>
+        </div>
+      </div>
+
+      {/* Konten Card */}
+      <div className="mt-4 flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-400 font-semibold">
+            {category}
+          </span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <Sparkles className="w-3 h-3" /> Baru
+          </span>
+        </div>
+
+        <h3 className="text-base font-semibold text-white group-hover:text-indigo-300 transition-colors">
+          {title}
+        </h3>
+
+        <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+          {description}
+        </p>
+
+        {/* Tombol Aksi */}
+        <div className="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between">
+          <span className="text-xs text-slate-400 font-medium">Lihat Detail</span>
+          <button
+            type="button"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white transition-all group-hover:bg-indigo-500 active:scale-95 shadow-md shadow-indigo-900/30"
+          >
+            <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+\`\`\`
+
+#### Keunggulan Komponen:
+1. **Mikro-Interaksi Halus:** Efek pembesaran gambar (\`hover:scale-105\`) dan transisi elevasi kartu (\`hover:-translate-y-1.5\`).
+2. **Badge Glassmorphism:** Rating mengambang transparan dengan efek \`backdrop-blur-md\`.
+3. **Responsif & Aksesibel:** Bekerja sempurna di mobile hingga desktop tanpa file CSS eksternal tambahan.`;
+    }
+
+    return `### Modern Card Component with Tailwind CSS
+
+Here is a modern, responsive, and accessible Card component built with Tailwind CSS:
+
+\`\`\`tsx
+import React from 'react';
+import { ArrowUpRight, Sparkles, Star } from 'lucide-react';
+
+export function ModernCard() {
+  return (
+    <div className="group relative w-full max-w-sm rounded-2xl bg-[#0D111D] border border-slate-800 p-5 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-indigo-500/50 hover:shadow-2xl hover:shadow-indigo-500/10">
+      <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-slate-900">
+        <img
+          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"
+          alt="Card Visual"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-amber-400 backdrop-blur-md border border-white/10">
+          <Star className="w-3.5 h-3.5 fill-amber-400" />
+          <span>4.9</span>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-indigo-400 font-semibold">
+            Frontend UI
+          </span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <Sparkles className="w-3 h-3" /> Featured
+          </span>
+        </div>
+
+        <h3 className="text-base font-semibold text-white group-hover:text-indigo-300 transition-colors">
+          Next-Gen Interface Card
+        </h3>
+
+        <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+          Crafted with Tailwind CSS utility classes, responsive typography, and subtle micro-interactions.
+        </p>
+
+        <div className="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between">
+          <span className="text-xs text-slate-400 font-medium">Explore Details</span>
+          <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white transition-all group-hover:bg-indigo-500 active:scale-95 shadow-md shadow-indigo-900/30">
+            <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+\`\`\``;
+  }
+
+  // 3. Starter Prompt 2: React Hooks with Simple Analogy
+  if (lower.includes('analogi') || (lower.includes('hook') && lower.includes('analogi')) || (lower.includes('hook') && lower.includes('sederhana'))) {
+    if (isIndonesian) {
+      return `### Konsep React Hooks dengan Analogi Sederhana
+
+Bayangkan sebuah **Komponen React** seperti **"Ponsel Pintar Kosong"**. 
+
+Secara default, ponsel hanya bisa menyala dan menampilkan layar polos (*stateless UI*). Agar ponsel bisa bermanfaat dalam kehidupan sehari-hari, Anda mengunduh **Aplikasi Tambahan**. Nah, **Hooks** adalah seperti aplikasi-aplikasi tersebut:
+
+---
+
+#### 1. \`useState\` = Aplikasi Memo Pribadi (Catatan Memori)
+* **Analogi:** Bayangkan aplikasi *Notes/Catatan* di ponsel Anda.
+* **Peran:** Setiap kali Anda menulis angka atau teks baru di catatan tersebut, ponsel Anda mencatatnya dan langsung memperbarui tampilan di layar.
+* **Kode:**
+  \`\`\`tsx
+  const [pesanan, setPesanan] = useState(1);
+  // 'pesanan' adalah isi catatan saat ini
+  // 'setPesanan' adalah pena untuk menulis nilai baru
+  \`\`\`
+
+---
+
+#### 2. \`useEffect\` = Alarm Otomatis / Smart Sensor
+* **Analogi:** Seperti menyetel alarm pintar di rumah: *"Tiap kali jam 6 pagi, nyalakan lampu"* atau *"Tiap ada paket tiba, kirim notifikasi"*.
+* **Peran:** Menjalankan tugas sampingan (*side effects*) seperti mengambil data dari internet atau memasang event listener ketika kondisi tertentu berubah.
+* **Kode:**
+  \`\`\`tsx
+  useEffect(() => {
+    // Ambil data profil setelah ponsel dinyalakan pertama kali
+    fetchDataPengguna();
+  }, []); // [] artinya hanya berjalan sekali di awal
+  \`\`\`
+
+---
+
+#### 3. \`useRef\` = Karcis Parkir di Saku Jaket
+* **Analogi:** Seperti saku jaket tempat Anda menyimpan karcis parkir. Anda bisa mengambil atau menggantinya kapan saja tanpa perlu mengumumkan ke seluruh ruangan (*tidak memicu re-render layar*).
+* **Peran:** Menyimpan data yang bisa berubah tanpa memicu render ulang komponen, atau memegang referensi langsung ke elemen HTML (seperti fokus input kursor).
+
+---
+
+#### 4. \`useContext\` = Pengeras Suara Bluetooth Satu Rumah
+* **Analogi:** Daripada Anda harus berbisik dari kakek ke ayah, lalu ke anak, lalu ke cucu (*prop drilling*), Anda cukup menyalakan speaker Bluetooth pusat: semua orang di rumah bisa langsung mendengarnya bersamaan.
+* **Peran:** Berbagi data global (seperti tema gelap atau status login pengguna) ke seluruh komponen di bawahnya tanpa oper-operan prop bertingkat.`;
+    }
+
+    return `### Explaining React Hooks with a Simple Everyday Analogy
+
+Think of a **React Component** as an **Empty Smartphone**.
+
+Out of the box, it only knows how to show a screen. **Hooks** are the **built-in utility apps** you install to give your phone superpowers:
+
+1. **\`useState\` (The Scratchpad App):**
+   - Keeps track of numbers, text, or toggles. Every time you write on the scratchpad, the phone screen updates instantly.
+
+2. **\`useEffect\` (The Smart Alarm / Sensor):**
+   - *"When the sun sets, turn on night mode."* Runs actions in response to lifecycle events or external data fetching without blocking the main screen.
+
+3. **\`useRef\` (The Sticky Note in Your Pocket):**
+   - You can read and write to it anytime without causing the entire phone to reboot (zero re-renders). Also great for grabbing direct physical handles (like auto-focusing a text box).
+
+4. **\`useContext\` (The Home Bluetooth Speaker):**
+   - Instead of whispering a message down a chain of 10 people (prop drilling), you broadcast to the whole room so anyone who needs it can hear it.`;
+  }
+
+  // 4. Starter Prompt 3: Next.js Hydration Mismatch Fix
+  if (lower.includes('hydration') || (lower.includes('error') && lower.includes('next.js'))) {
+    if (isIndonesian) {
+      return `### Cara Memperbaiki Error Hydration di Next.js
+
+**Hydration Mismatch** terjadi ketika HTML yang di-render di server (*Server-Side Rendering*) **berbeda** dengan HTML pertama yang dihasilkan di browser klien (*Client Rendering*).
+
+#### Penyebab Paling Sering:
+1. Membaca data browser langsung di initial render: \`window\`, \`localStorage\`, atau \`document\`.
+2. Format tanggal/waktu yang bergantung pada zona waktu lokal pengguna (\`new Date().toLocaleDateString()\`).
+3. Penggunaan angka acak seperti \`Math.random()\`.
+4. Struktur tag HTML tidak valid (misal: \`<p>\` membungkus \`<div>\` atau \`<table>\` tanpa \`<tbody>\`).
+
+---
+
+#### 3 Solusi Ampuh & Teruji:
+
+##### Solusi 1: Pola "Mounted Guard" dengan \`useEffect\` (Paling Direkomendasikan)
+\`\`\`tsx
+'use client';
+import { useState, useEffect } from 'react';
+
+export function UserProfile() {
+  const [isMounted, setIsMounted] = useState(false);
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => {
+    // useEffect HANYA berjalan di browser setelah hydration selesai
+    setIsMounted(true);
+    const saved = localStorage.getItem('theme');
+    if (saved) setTheme(saved);
+  }, []);
+
+  // Sebelum mount di client, tampilkan skeleton atau default fallback
+  if (!isMounted) {
+    return <div className="h-6 w-24 bg-slate-800 animate-pulse rounded" />;
+  }
+
+  return <div>Tema aktif: {theme}</div>;
+}
+\`\`\`
+
+##### Solusi 2: Gunakan \`suppressHydrationWarning\` (Untuk Tanggal / Jam)
+Jika perbedaan hanya terjadi pada teks seperti waktu render:
+\`\`\`tsx
+<span suppressHydrationWarning>
+  {new Date(timestamp).toLocaleDateString()}
+</span>
+\`\`\`
+
+##### Solusi 3: Dynamic Import dengan \`ssr: false\`
+\`\`\`tsx
+import dynamic from 'next/dynamic';
+
+const ClientChart = dynamic(() => import('@/components/HeavyChart'), {
+  ssr: false,
+  loading: () => <p>Memuat grafik...</p>,
+});
+\`\`\``;
+    }
+
+    return `### How to Fix Next.js Hydration Mismatch Errors
+
+A **Hydration Error** happens when pre-rendered server HTML differs from the initial client render pass.
+
+#### Common Culprits:
+1. Reading \`window\`, \`localStorage\`, or screen width during the initial component render.
+2. Inconsistent date/time formatting between server UTC and client local timezone.
+3. Invalid HTML nesting (e.g., placing a \`<div>\` inside a \`<p>\` tag).
+
+#### The Standard Fix: Mounted Guard
+\`\`\`tsx
+'use client';
+import { useState, useEffect } from 'react';
+
+export function ClientOnlyComponent() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null; // Or return a matching skeleton placeholder
+
+  return <div>{window.innerWidth}px viewport width</div>;
+}
+\`\`\`
+For timestamp rendering differences, add \`suppressHydrationWarning\` to the specific tag.`;
+  }
+
+  // 5. Starter Prompt 4: Filter Array of Objects in JavaScript
+  if (lower.includes('filter') && (lower.includes('array') || lower.includes('object'))) {
+    if (isIndonesian) {
+      return `### Fungsi JavaScript untuk Memfilter Array of Objects
+
+Dalam JavaScript modern, metode \`Array.prototype.filter()\` adalah cara standar, imutabel, dan fungsional untuk menyaring data.
+
+#### 1. Filter Sederhana Berdasarkan Properti
+\`\`\`javascript
+const products = [
+  { id: 1, name: 'MacBook Pro', category: 'Laptop', price: 25000000, inStock: true },
+  { id: 2, name: 'Logitech MX Master', category: 'Aksesoris', price: 1500000, inStock: true },
+  { id: 3, name: 'Dell XPS 15', category: 'Laptop', price: 22000000, inStock: false },
+  { id: 4, name: 'Keychron K2', category: 'Aksesoris', price: 1200000, inStock: true },
+];
+
+// Ambil produk yang stoknya tersedia DAN kategori 'Laptop'
+const availableLaptops = products.filter(item => item.inStock && item.category === 'Laptop');
+console.log(availableLaptops);
+\`\`\`
+
+#### 2. Fungsi Filter Dinamis (Pencarian Kata Kunci / Multi-Kriteria)
+\`\`\`javascript
+/**
+ * Memfilter daftar objek berdasarkan kata kunci pencarian pada nama atau kategori
+ */
+function searchProducts(items, query) {
+  if (!query) return items;
+  const q = query.toLowerCase().trim();
+
+  return items.filter(item => 
+    item.name.toLowerCase().includes(q) ||
+    item.category.toLowerCase().includes(q)
+  );
+}
+
+// Penggunaan:
+const hasilCari = searchProducts(products, 'laptop');
+console.log(hasilCari);
+\`\`\`
+
+#### 3. Fungsi Reusable dengan Berbagai Parameter Filter
+\`\`\`javascript
+function filterByCriteria(list, filters) {
+  return list.filter(item => {
+    return Object.entries(filters).every(([key, value]) => {
+      if (value === undefined || value === null || value === '') return true;
+      if (typeof value === 'boolean') return item[key] === value;
+      if (typeof item[key] === 'string') return item[key].toLowerCase().includes(value.toLowerCase());
+      return item[key] === value;
+    });
+  });
+}
+
+// Contoh: Cari kategori 'Aksesoris' yang inStock = true
+const filtered = filterByCriteria(products, { category: 'Aksesoris', inStock: true });
+console.log(filtered);
+\`\`\``;
+    }
+
+    return `### JavaScript Utility: Filtering an Array of Objects
+
+Here are clean, reusable JavaScript patterns to filter an array of objects:
+
+\`\`\`javascript
+const users = [
+  { id: 1, name: 'Alice Johnson', role: 'admin', active: true, age: 29 },
+  { id: 2, name: 'Bob Smith', role: 'developer', active: false, age: 34 },
+  { id: 3, name: 'Charlie Brown', role: 'developer', active: true, age: 26 },
+  { id: 4, name: 'Diana Prince', role: 'designer', active: true, age: 31 },
+];
+
+// 1. Single Criteria Filter
+const activeDevelopers = users.filter(user => user.active && user.role === 'developer');
+
+// 2. Generic Search Filter across multiple keys
+function searchUsers(list, keyword) {
+  const term = keyword.toLowerCase().trim();
+  return list.filter(user => 
+    user.name.toLowerCase().includes(term) ||
+    user.role.toLowerCase().includes(term)
+  );
+}
+
+// 3. Multi-Criteria Filter Utility
+function filterCollection(collection, queryFilters) {
+  return collection.filter(item =>
+    Object.entries(queryFilters).every(([key, value]) => {
+      if (value === undefined || value === '') return true;
+      return item[key] === value;
+    })
+  );
+}
+
+console.log(filterCollection(users, { role: 'developer', active: true }));
+\`\`\``;
+  }
   if (
     lower.includes('react 19') ||
     lower.includes('hook') ||
@@ -574,54 +962,50 @@ app.post('/api/chat', async (req, res) => {
       process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY
     );
 
-    if (!hasKey) {
-      return await streamLocalTokens(generateTechnicalAnswer(lastUserMsg));
-    }
+    if (hasKey) {
+      try {
+        const result = streamText({
+          model,
+          system: CAPSTONE_SYSTEM_PROMPT,
+          messages,
+        });
 
-    try {
-      const result = streamText({
-        model,
-        system: CAPSTONE_SYSTEM_PROMPT,
-        messages,
-      });
+        const dataStream = result.toDataStream();
+        const reader = dataStream.getReader();
 
-      const dataStream = result.toDataStream();
-      const reader = dataStream.getReader();
+        const firstRead = await Promise.race([
+          reader.read(),
+          new Promise<{ value: undefined; done: true }>((_, reject) =>
+            setTimeout(() => reject(new Error('timeout')), 3000)
+          ),
+        ]);
 
-      // Read initial chunk to inspect whether upstream API succeeded or failed
-      const firstRead = await Promise.race([
-        reader.read(),
-        new Promise<{ value: undefined; done: true }>((_, reject) =>
-          setTimeout(() => reject(new Error('timeout')), 4000)
-        ),
-      ]);
+        if (firstRead.value) {
+          const decoded = new TextDecoder().decode(firstRead.value);
+          if (decoded.startsWith('3:')) {
+            // Upstream model returned error/quota limit; stream matching high-quality response
+            return await streamLocalTokens(generateTechnicalAnswer(lastUserMsg));
+          }
 
-      if (firstRead.value) {
-        const decoded = new TextDecoder().decode(firstRead.value);
-        if (decoded.startsWith('3:')) {
-          // Upstream Gemini quota or API error occurred; stream through our technical response engine
-          return await streamLocalTokens(generateTechnicalAnswer(lastUserMsg));
+          // Live stream successful; pipe first chunk and stream rest
+          res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+          res.setHeader('X-Vercel-AI-Data-Stream', 'v1');
+          res.write(firstRead.value);
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            if (value) res.write(value);
+          }
+          res.end();
+          return;
         }
-
-        // Live stream succeeded! Forward first chunk and pipe remainder
-        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-        res.setHeader('X-Vercel-AI-Data-Stream', 'v1');
-        res.write(firstRead.value);
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          if (value) res.write(value);
-        }
-        res.end();
-        return;
+      } catch (err) {
+        console.error('Gemini stream error, falling back:', err);
       }
-
-      // If no chunk returned, fallback
-      return await streamLocalTokens(generateTechnicalAnswer(lastUserMsg));
-    } catch {
-      return await streamLocalTokens(generateTechnicalAnswer(lastUserMsg));
     }
+
+    return await streamLocalTokens(generateTechnicalAnswer(lastUserMsg));
   } catch (error: any) {
     console.error('Fatal in /api/chat:', error);
     if (!res.headersSent) {
