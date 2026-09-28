@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import StreamingChat from '@/components/StreamingChat';
 import ChatSidebar from '@/components/ChatSidebar';
 import type { ChatSession, AppLanguage } from '@/types/chat';
@@ -20,11 +20,11 @@ import {
   Globe,
 } from 'lucide-react';
 
-function createNewThread(lang: AppLanguage): ChatSession {
+function createNewSession(lang: AppLanguage): ChatSession {
   const now = Date.now();
   return {
-    id: `thread_${now}_${Math.random().toString(36).substring(2, 7)}`,
-    title: lang === 'id' ? 'Percakapan Baru' : 'New Conversation',
+    id: `audit_${now}_${Math.random().toString(36).substring(2, 7)}`,
+    title: lang === 'id' ? 'Sesi Audit Baru' : 'New Audit Session',
     createdAt: now,
     updatedAt: now,
     messages: [],
@@ -33,20 +33,20 @@ function createNewThread(lang: AppLanguage): ChatSession {
 
 export default function ChatPage() {
   const [lang, setLang] = useState<AppLanguage>(() => {
-    if (typeof window === 'undefined') return 'id';
+    if (typeof window === 'undefined') return 'en';
     try {
       const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
       if (stored === 'en' || stored === 'id') return stored;
     } catch {
       // fallback
     }
-    return 'id';
+    return 'en';
   });
 
   const t = I18N_DICTIONARY[lang];
 
   const [sessions, setSessions] = useState<ChatSession[]>(() => {
-    if (typeof window === 'undefined') return [createNewThread('id')];
+    if (typeof window === 'undefined') return [createNewSession('en')];
     try {
       const stored = localStorage.getItem(SESSIONS_STORAGE_KEY);
       if (stored) {
@@ -56,7 +56,7 @@ export default function ChatPage() {
     } catch {
       // fallback
     }
-    return [createNewThread('id')];
+    return [createNewSession('en')];
   });
 
   const [activeSessionId, setActiveSessionId] = useState<string>(() => {
@@ -72,15 +72,17 @@ export default function ChatPage() {
     return sessions[0]?.id || '';
   });
 
+  // Track chat reset counter to cleanly remount chat without recursive state updates
+  const [chatResetKey, setChatResetKey] = useState<number>(0);
+
   // On desktop/tablet (width >= 768px), sidebar defaults to open. On mobile, defaults to closed.
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     return window.innerWidth >= 768;
   });
 
-  // Toggle language and persist
   const toggleLanguage = () => {
-    const nextLang: AppLanguage = lang === 'id' ? 'en' : 'id';
+    const nextLang: AppLanguage = lang === 'en' ? 'id' : 'en';
     setLang(nextLang);
     try {
       localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLang);
@@ -107,7 +109,7 @@ export default function ChatPage() {
       try {
         localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
       } catch (err) {
-        console.error('Failed to sync sessions to localStorage:', err);
+        console.error('Failed to sync audit sessions to localStorage:', err);
       }
     }
   }, [sessions]);
@@ -126,19 +128,33 @@ export default function ChatPage() {
   const activeSession =
     sessions.find((s) => s.id === activeSessionId) || sessions[0];
 
-  // Callback to update messages for a specific session
-  const handleUpdateSessionMessages = (
-    sessionId: string,
-    newMessages: Message[]
-  ) => {
-    setSessions((prev) =>
-      prev.map((s) => {
-        if (s.id !== sessionId) return s;
+  // Callback to update messages for a specific session with strict bailout guard
+  const handleUpdateSessionMessages = useCallback(
+    (sessionId: string, newMessages: Message[]) => {
+      setSessions((prev) => {
+        const target = prev.find((s) => s.id === sessionId);
+        if (!target) return prev;
+
+        // Bail out if messages are identical to break any recursive render cycles
+        if (target.messages === newMessages) return prev;
+        if (
+          target.messages.length === newMessages.length &&
+          target.messages.every(
+            (m, i) =>
+              m.id === newMessages[i]?.id &&
+              m.content === newMessages[i]?.content &&
+              m.role === newMessages[i]?.role
+          )
+        ) {
+          return prev;
+        }
 
         // Auto-generate title from the first user message if title is default
-        let title = s.title;
+        let title = target.title;
         if (
-          (title === 'Percakapan Baru' ||
+          (title === 'New Audit Session' ||
+            title === 'Sesi Audit Baru' ||
+            title === 'Percakapan Baru' ||
             title === 'New Conversation' ||
             !title) &&
           newMessages.length > 0
@@ -151,18 +167,23 @@ export default function ChatPage() {
           }
         }
 
-        return {
-          ...s,
-          title,
-          updatedAt: Date.now(),
-          messages: newMessages,
-        };
-      })
-    );
-  };
+        return prev.map((s) =>
+          s.id === sessionId
+            ? {
+                ...s,
+                title,
+                updatedAt: Date.now(),
+                messages: newMessages,
+              }
+            : s
+        );
+      });
+    },
+    []
+  );
 
   const handleNewSession = () => {
-    const fresh = createNewThread(lang);
+    const fresh = createNewSession(lang);
     setSessions((prev) => [fresh, ...prev]);
     setActiveSessionId(fresh.id);
   };
@@ -171,7 +192,7 @@ export default function ChatPage() {
     setSessions((prev) => {
       const remaining = prev.filter((s) => s.id !== id);
       if (remaining.length === 0) {
-        const fresh = createNewThread(lang);
+        const fresh = createNewSession(lang);
         setActiveSessionId(fresh.id);
         return [fresh];
       }
@@ -190,7 +211,14 @@ export default function ChatPage() {
 
   const handleClearCurrentChat = () => {
     if (window.confirm(t.confirmClear)) {
-      handleUpdateSessionMessages(activeSession.id, []);
+      setSessions((prev) =>
+        prev.map((s) =>
+          s.id === activeSession.id
+            ? { ...s, messages: [], updatedAt: Date.now() }
+            : s
+        )
+      );
+      setChatResetKey((k) => k + 1);
     }
   };
 
@@ -214,7 +242,7 @@ export default function ChatPage() {
         {/* Top Navbar */}
         <header className="h-14 sm:h-15 border-b border-[#1A1F2E] bg-[#0C0E15]/95 px-3 sm:px-6 flex items-center justify-between backdrop-blur-md z-20 flex-shrink-0">
           <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
-            {/* Sidebar Toggle Button for Desktop, Tablet, and Mobile */}
+            {/* Sidebar Toggle Button */}
             <button
               type="button"
               onClick={() => setIsSidebarOpen((prev) => !prev)}
@@ -229,15 +257,15 @@ export default function ChatPage() {
               )}
             </button>
 
-            {/* Thread Title & FlyRank Badge */}
+            {/* Thread Title & Scenario B Badge */}
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <h1 className="text-xs sm:text-sm font-semibold text-white truncate max-w-[170px] sm:max-w-xs md:max-w-md">
-                  {activeSession?.title || t.newThread}
+                  {activeSession?.title || t.newAudit}
                 </h1>
                 <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                   <Terminal className="w-2.5 h-2.5" />
-                  FlyRank • FE-06
+                  Scenario B • Auditor
                 </span>
               </div>
             </div>
@@ -249,16 +277,16 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={toggleLanguage}
-              title={lang === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
+              title={lang === 'en' ? 'Ganti ke Bahasa Indonesia' : 'Switch to English'}
               aria-label="Toggle language"
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#121622] hover:bg-[#1A2030] border border-[#20273D] text-xs font-mono transition-colors shadow-sm"
             >
               <Globe className="w-3.5 h-3.5 text-indigo-400" />
               <span className="font-semibold text-white">
-                {lang === 'id' ? 'ID' : 'EN'}
+                {lang === 'en' ? 'EN' : 'ID'}
               </span>
               <span className="text-[10px] text-slate-400">
-                /{lang === 'id' ? 'EN' : 'ID'}
+                /{lang === 'en' ? 'ID' : 'EN'}
               </span>
             </button>
 
@@ -276,16 +304,16 @@ export default function ChatPage() {
               </button>
             )}
 
-            {/* Quick New Thread Button */}
+            {/* Quick New Audit Button */}
             <button
               type="button"
               onClick={handleNewSession}
-              title={t.newThread}
-              aria-label={t.newThread}
+              title={t.newAudit}
+              aria-label={t.newAudit}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium shadow-sm transition-all active:scale-95"
             >
               <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">{t.newThreadShort}</span>
+              <span className="hidden sm:inline">{t.newAuditShort}</span>
             </button>
           </div>
         </header>
@@ -294,11 +322,10 @@ export default function ChatPage() {
         <main className="flex-1 min-h-0 overflow-hidden relative">
           {activeSession && (
             <StreamingChat
-              key={activeSession.id}
+              key={`${activeSession.id}_${chatResetKey}`}
               session={activeSession}
               lang={lang}
               onUpdateSessionMessages={handleUpdateSessionMessages}
-              onOpenSidebar={() => setIsSidebarOpen(true)}
             />
           )}
         </main>
