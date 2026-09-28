@@ -1,0 +1,6 @@
+{
+  "name": "Streaming AI Chat Interface",
+  "description": "Production-grade streaming AI chat interface powered by Next.js, Vercel AI SDK, and Google Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
